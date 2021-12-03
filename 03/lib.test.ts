@@ -1,5 +1,13 @@
 import { assertEquals } from "https://deno.land/std@0.107.0/testing/asserts.ts";
-import { findCO2Rate, findEpsilonRate, findGammaRate, findO2Rate, parseInput, part1, part2, toDec } from "./lib.ts";
+import {
+  findCO2Rate,
+  findEpsilonRate,
+  findGammaRate,
+  findO2Rate,
+  parseInput,
+  part1,
+  part2,
+} from "./lib.ts";
 
 const testInput = `00100
 11110
@@ -31,40 +39,32 @@ Deno.test("can parse input", () => {
 });
 
 Deno.test("o2 rate", () => {
-    const want = [1,0,1,1,1];
-    const result = findO2Rate(parseInput(testInput));
+  const want = [1, 0, 1, 1, 1];
+  const result = findO2Rate(parseInput(testInput));
 
-    assertEquals(want, result);
+  assertEquals(want, result);
 });
 
 Deno.test("co2 rate", () => {
-    const want = [0,1,0,1,0];
-    const result = findCO2Rate(parseInput(testInput));
+  const want = [0, 1, 0, 1, 0];
+  const result = findCO2Rate(parseInput(testInput));
 
-    assertEquals(want, result);
+  assertEquals(want, result);
 });
 
 Deno.test("gamma rate", () => {
-    const want = [1,0,1,1,0];
-    const result = findGammaRate(parseInput(testInput));
+  const want = [1, 0, 1, 1, 0];
+  const result = findGammaRate(parseInput(testInput));
 
-    assertEquals(want, result);
+  assertEquals(want, result);
 });
 
 Deno.test("epsilon rate", () => {
-    const want = [0,1,0,0,1];
-    const result = findEpsilonRate([1,0,1,1,0]);
+  const want = [0, 1, 0, 0, 1];
+  const result = findEpsilonRate([1, 0, 1, 1, 0]);
 
-    assertEquals(want, result);
+  assertEquals(want, result);
 });
-
-Deno.test("toDec", () => {
-    const want = 22;
-    const result = toDec([1,0,1,1,0]);
-
-    assertEquals(want, result);
-});
-
 
 Deno.test("part1 test input", () => {
   const want = 198;
