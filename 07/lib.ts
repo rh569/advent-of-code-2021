@@ -35,7 +35,9 @@ function calculateMinimumFuel(
 ): number {
   let minFuel = null;
 
-  for (let i = 0; i < crabPositions.length; i++) {
+  const maxPosition = crabPositions.reduce((a, b) => Math.max(a, b));
+
+  for (let i = 0; i < maxPosition; i++) {
     const fuel = calculateFuelToPosition(crabPositions, i + 1, fuelRate);
 
     minFuel = minFuel === null ? fuel : Math.min(fuel, minFuel);
