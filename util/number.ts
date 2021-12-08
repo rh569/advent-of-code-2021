@@ -1,13 +1,10 @@
+import { is } from "./functional.ts";
 import { BinaryArray } from "./types.ts";
 
 export function binaryArrayToDecimal(bin: BinaryArray): number {
-  let dec = 0;
+  return Number("0b" + bin.join(""));
+}
 
-  bin.forEach((bit, index) => {
-    if (bit) {
-      dec += Math.pow(2, bin.length - index - 1);
-    }
-  });
-
-  return dec;
+export function countSetBits(n: number) {
+  return n.toString(2).split("").filter(is("1")).length;
 }

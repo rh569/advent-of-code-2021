@@ -45,7 +45,6 @@ export function part1(instructions: [string, number][]): number {
     }
   });
 
-  console.log(`Made it to `, pos);
   return pos.h * pos.d;
 }
 
@@ -79,6 +78,5 @@ export function part2(instructions: [string, number][]): number {
     }
   });
 
-  console.log(`Made it to `, state);
   return state.h * state.d;
 }
