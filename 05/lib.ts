@@ -1,7 +1,4 @@
-export type Vector2 = {
-  x: number;
-  y: number;
-};
+import { Vector2 } from "../util/types.ts";
 
 export type LineSegment = {
   start: Vector2;
@@ -106,7 +103,7 @@ function countOverlappingVents(vents: Map<string, number>): number {
 
 // Prints the vents to match the puzzle description
 // Used to help debug the test cases
-function printVents(vents: Map<string, number>): void {
+function _printVents(vents: Map<string, number>): void {
   let largestX = 0;
   let largestY = 0;
 
