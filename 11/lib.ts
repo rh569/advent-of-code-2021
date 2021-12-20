@@ -5,20 +5,25 @@ type Octopus = {
   flashed: boolean;
 };
 
-class UnforgivingMap <K, V> extends Map<K, V> {
-    constructor() {
-        super();
+type SimulationReport = {
+  flashes: number;
+  state?: number[][];
+};
+
+class UnforgivingMap<K, V> extends Map<K, V> {
+  constructor() {
+    super();
+  }
+
+  unforgivingGet = (key: K): V => {
+    const value = this.get(key);
+
+    if (value === undefined) {
+      throw new Error(`Key ${key} does not exist in ${this}`);
     }
 
-    unforgivingGet = (key: K): V => {
-        const value = this.get(key);
-
-        if (value === undefined) {
-            throw new Error(`Key ${key} does not exist in ${this}`);
-        }
-
-        return value;
-    }
+    return value;
+  };
 }
 
 export function parseInput(rawInput: string): UnforgivingMap<string, Octopus> {
@@ -39,28 +44,28 @@ export function parseInput(rawInput: string): UnforgivingMap<string, Octopus> {
   });
 
   const neighbourOffsets = [
-      [-1, -1],
-      [0, -1],
-      [1, -1],
-      [-1, 0],
-      [1, 0],
-      [-1, 1],
-      [0, 1],
-      [1, 1],
-  ]
+    [-1, -1],
+    [0, -1],
+    [1, -1],
+    [-1, 0],
+    [1, 0],
+    [-1, 1],
+    [0, 1],
+    [1, 1],
+  ];
 
   // Link the octopuses
   octopuses.forEach((octo, key) => {
     const pos = JSON.parse(key) as number[];
 
-    neighbourOffsets.forEach(offset => {
-        const nPos = [pos[0] + offset[0], pos[1] + offset[1]];
+    neighbourOffsets.forEach((offset) => {
+      const nPos = [pos[0] + offset[0], pos[1] + offset[1]];
 
-        if (nPos[0] < 0 || nPos[1] < 0 || nPos[0] > 9 || nPos[1] > 9) {
-            return;
-        }
+      if (nPos[0] < 0 || nPos[1] < 0 || nPos[0] > 9 || nPos[1] > 9) {
+        return;
+      }
 
-        octo.neighbours.push(octopuses.unforgivingGet(JSON.stringify(nPos)));
+      octo.neighbours.push(octopuses.unforgivingGet(JSON.stringify(nPos)));
     });
   });
 
@@ -72,7 +77,8 @@ export function part1(octopuses: UnforgivingMap<string, Octopus>): number {
   let flashes = 0;
 
   for (let step = 0; step < 100; step++) {
-    flashes += simulate(octopuses);
+    const { flashes: newFlashes } = simulate(octopuses);
+    flashes += newFlashes;
   }
 
   return flashes;
@@ -81,9 +87,11 @@ export function part1(octopuses: UnforgivingMap<string, Octopus>): number {
 // At what step do all flashes synchronise?
 export function part2(octopuses: UnforgivingMap<string, Octopus>): number {
   let step = 1;
-  
+
   while (step <= 10000) {
-    if(simulate(octopuses) === 100) {
+    const { flashes } = simulate(octopuses);
+
+    if (flashes === 100) {
       return step;
     }
 
@@ -95,23 +103,26 @@ export function part2(octopuses: UnforgivingMap<string, Octopus>): number {
 
 /**
  * Simulates one step returning the number of flashes
- * @param octopuses 
+ * @param octopuses
  */
-function simulate(octopuses: UnforgivingMap<string, Octopus>): number {
+export function simulate(
+  octopuses: UnforgivingMap<string, Octopus>,
+  record = false,
+): SimulationReport {
   let flashes = 0;
-  
+
   // Set up
-  octopuses.forEach(octo => {
+  octopuses.forEach((octo) => {
     octo.energy += 1;
   });
 
   // Flash
-  octopuses.forEach(octo => {
+  octopuses.forEach((octo) => {
     flashAndCheck(octo);
   });
 
   // Reset
-  octopuses.forEach(octo => {
+  octopuses.forEach((octo) => {
     if (octo.flashed) {
       flashes++;
       octo.energy = 0;
@@ -119,16 +130,19 @@ function simulate(octopuses: UnforgivingMap<string, Octopus>): number {
     }
   });
 
-  return flashes;
+  return {
+    flashes,
+    state: record ? toEnergyMap(octopuses) : undefined,
+  };
 }
 
 /**
  * Check to see if this octo can still flash this step
  * and whether it should
- * 
+ *
  * If it does, inrease the energy of its neighbours and recurse
- * @param octo 
- * @returns 
+ * @param octo
+ * @returns
  */
 function flashAndCheck(octo: Octopus): void {
   if (octo.flashed) return;
@@ -136,21 +150,22 @@ function flashAndCheck(octo: Octopus): void {
   if (octo.energy > 9) {
     octo.flashed = true;
 
-    octo.neighbours.forEach(neighbour => {
+    octo.neighbours.forEach((neighbour) => {
       neighbour.energy += 1;
       flashAndCheck(neighbour);
-    })
+    });
   }
 }
 
-function _printOctos(octos: UnforgivingMap<string, Octopus>): void {
+export function toEnergyMap(
+  octos: UnforgivingMap<string, Octopus>,
+): number[][] {
+  let energyMap = new Array(10).fill(null);
+  energyMap = energyMap.map((_) => new Array(10).fill("x"));
 
-  let out = new Array(10).fill(null);
-  out = out.map(_ => new Array(10).fill("x"));
+  octos.forEach((octo) => {
+    energyMap[octo.pos[1]][octo.pos[0]] = octo.energy <= 9 ? octo.energy : "X";
+  });
 
-  octos.forEach(octo => {
-    out[octo.pos[1]][octo.pos[0]] = octo.energy <= 9 ? octo.energy : "X";
-  })
-
-  console.log(out.map(line => line.join("")).join("\n"));
+  return energyMap;
 }
