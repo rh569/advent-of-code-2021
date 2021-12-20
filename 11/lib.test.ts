@@ -1,8 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.107.0/testing/asserts.ts";
 import { parseInput, part1, part2 } from "./lib.ts";
 
-const testInput = 
-`5483143223
+const testInput = `5483143223
 2745854711
 5264556173
 6141336146

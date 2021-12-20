@@ -42,10 +42,6 @@ function getNode(nodes: Map<string, Node>, i: number, j: number): Node {
   return node;
 }
 
-function fromKey(i_j: string): [number, number] {
-  return i_j.split(",").map((n) => parseInt(n)) as [number, number];
-}
-
 function getUnvisitedNeighbours(nodes: Map<string, Node>, node: Node): Node[] {
   const neighbours: Node[] = [];
 
