@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.107.0/testing/asserts.ts";
-import { parseInput, part1, part2 } from "./lib.ts";
+import { part1, part2 } from "./lib.ts";
 
 const testInput1 = `start-A
 start-b
