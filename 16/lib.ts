@@ -209,8 +209,8 @@ function maximumSubpacket(subpackets: Packet[]): number {
 }
 
 function compareSubpackets(subpackets: Packet[]): "gt" | "lt" | "eq" {
-  let v1 = calculatePacket(subpackets[0]);
-  let v2 = calculatePacket(subpackets[1]);
+  const v1 = calculatePacket(subpackets[0]);
+  const v2 = calculatePacket(subpackets[1]);
 
   if (v1 > v2) return "gt";
   if (v1 < v2) return "lt";
